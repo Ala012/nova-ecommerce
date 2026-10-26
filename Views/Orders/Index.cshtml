@@ -1,0 +1,13 @@
+@model IList<Order>
+@{ ViewData["Title"] = "Mes commandes"; }
+<section class="hero small"><p class="eyebrow">Historique</p><h1 class="split">Mes commandes</h1></section>
+@if (!Model.Any()) { <div class="empty"><h3>Aucune commande pour le moment</h3><a class="btn btn-primary" asp-controller="Product" asp-action="Index">Commencer</a></div> }
+<div class="orders">
+@foreach (var o in Model)
+{
+    <details class="panel reveal order">
+        <summary><span>#@o.Id</span><span>@o.OrderDate.ToString("dd/MM/yyyy")</span><span class="chip">@o.Status</span><b>@o.TotalAmount.ToString("0.00") DT</b></summary>
+        <ul>@foreach (var i in o.Items) { <li>@i.Quantity × @i.ProductName — @((i.Price*i.Quantity).ToString("0.00")) DT</li> }</ul>
+    </details>
+}
+</div>

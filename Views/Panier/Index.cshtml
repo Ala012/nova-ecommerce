@@ -1,0 +1,40 @@
+@model ListeCart
+@{ ViewData["Title"] = "Mon panier"; }
+<section class="hero small"><p class="eyebrow">Panier</p><h1 class="split">Mon panier</h1></section>
+@if (!Model.Items.Any())
+{
+    <div class="empty reveal"><h3>Votre panier est vide</h3><p class="muted">Découvrez nos produits et ajoutez vos favoris.</p><a class="btn btn-primary" asp-controller="Product" asp-action="Index">Continuer mes achats</a></div>
+}
+else
+{
+<div class="cart-layout">
+    <div class="cart-items">
+        @foreach (var item in Model.Items)
+        {
+            <div class="cart-row reveal" id="row_@item.ProductId">
+                <img src="@item.Image" alt="@item.Name" />
+                <div class="cart-info">
+                    <h4>@item.Name</h4>
+                    <p class="muted">@item.CategoryName · @item.Price.ToString("0.00") DT</p>
+                </div>
+                <div class="qty">
+                    <button class="qty-btn MinProducts" data-id="@item.ProductId" aria-label="Diminuer">−</button>
+                    <span id="quantite_@item.ProductId">@item.quantite</span>
+                    <button class="qty-btn PlusProducts" data-id="@item.ProductId" aria-label="Augmenter">+</button>
+                </div>
+                <strong class="row-total" id="total_@item.ProductId">@item.TotalPrice.ToString("0.00")</strong>
+                <button class="icon-btn RemoveProduct" data-id="@item.ProductId" aria-label="Supprimer">✕</button>
+            </div>
+        }
+        <form asp-action="Vider" method="post"><button class="link-btn danger">Vider le panier</button></form>
+    </div>
+    <aside class="summary reveal">
+        <h3>Récapitulatif</h3>
+        <div class="sum-line"><span>Articles</span><span id="sumCount">@Model.Count</span></div>
+        <div class="sum-line"><span>Livraison</span><span>Offerte</span></div>
+        <div class="sum-line total"><span>Prix total à payer</span><span><b id="totalPanier">@Model.GetSubTotal().ToString("0.00")</b> DT</span></div>
+        <a class="btn btn-primary btn-block magnetic" asp-action="Checkout">Commander »</a>
+        <a class="btn btn-ghost btn-block" asp-controller="Product" asp-action="Index">Continuer mes achats</a>
+    </aside>
+</div>
+}

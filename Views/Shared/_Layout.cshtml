@@ -1,0 +1,77 @@
+@inject SignInManager<IdentityUser> SignInManager
+@{ var cartCount = (int)(ViewData["CartCount"] ?? 0); }
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@(ViewData["Title"] ?? "Nova") · Nova Shop</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/lenis@1.1.13/dist/lenis.css">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+<header class="nav">
+    <div class="nav-inner">
+        <button class="icon-btn" id="toggleMenu" aria-label="Ouvrir la liste des catégories" aria-controls="sidebar" aria-expanded="false">
+            <span class="burger"><i></i><i></i><i></i></span>
+        </button>
+        <a class="brand" asp-controller="Product" asp-action="Index">Nova<span>.</span></a>
+        <form class="nav-search" asp-controller="Product" asp-action="Index" method="get">
+            <input name="search" placeholder="Rechercher un produit…" value="@Context.Request.Query["search"]" />
+        </form>
+        <nav class="nav-links">
+            @if (User.IsInRole("Admin"))
+            {
+                <a class="admin-link" asp-controller="Admin" asp-action="Products">Administration</a>
+            }
+            @if (SignInManager.IsSignedIn(User))
+            {
+                <a asp-controller="Orders" asp-action="Index">Mes commandes</a>
+                <form asp-controller="Account" asp-action="Logout" method="post" class="inline"><button class="link-btn">Déconnexion</button></form>
+            }
+            else
+            {
+                <a asp-controller="Account" asp-action="Login">Connexion</a>
+            }
+            <a class="cart-btn magnetic" asp-controller="Panier" asp-action="Index">
+                Mon panier <span class="badge" id="cartCount">@cartCount</span>
+            </a>
+        </nav>
+    </div>
+</header>
+
+<aside id="sidebar" class="sidebar" aria-hidden="true">
+    <div class="sidebar-head">
+        <h5>Catégories</h5>
+        <button class="icon-btn" id="closeMenu" aria-label="Fermer la liste des catégories">✕</button>
+    </div>
+    @await Html.PartialAsync("_CategoriesMenu", ViewData["Categories"])
+</aside>
+<div id="overlay" class="overlay"></div>
+
+<div class="page-column">
+    <main id="mainContent" class="main" role="main">
+        @RenderBody()
+    </main>
+
+    <footer class="footer">
+        <div id="footerContent" class="footer-content">
+            <div class="brand footer-big">Nova<span>.</span></div>
+            <p>&copy; 2026 - Gestion des Articles - Tous droits réservés.</p>
+        </div>
+    </footer>
+</div>
+
+<div id="toast" class="toast">@TempData["Toast"]</div>
+
+<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+<script src="~/js/Monscript.js" asp-append-version="true"></script>
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

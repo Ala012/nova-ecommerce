@@ -1,0 +1,39 @@
+@model ProduitPaginationViewModel
+@{ ViewData["Title"] = Model.CategoryName ?? "Produits"; }
+<section class="hero">
+    <p class="eyebrow">Gestion des articles · @Model.TotalProducts produits</p>
+    <h1 class="split">@(Model.CategoryName ?? "Le marché du quotidien")</h1>
+    <p class="lead">Alimentaire, hygiène, maison, mode — sélectionnés avec soin, livrés chez vous.</p>
+</section>
+
+<form class="toolbar" method="get" asp-action="Index">
+    <input type="hidden" name="categoryId" value="@Model.CategoryId" />
+    <input class="input" name="search" value="@Model.Search" placeholder="Filtrer par nom…" />
+    <select class="input" name="sort" onchange="this.form.submit()">
+        <option value="" selected="@(string.IsNullOrEmpty(Model.Sort))">Tri par défaut</option>
+        <option value="prix_asc" selected="@(Model.Sort=="prix_asc")">Prix croissant</option>
+        <option value="prix_desc" selected="@(Model.Sort=="prix_desc")">Prix décroissant</option>
+        <option value="nom" selected="@(Model.Sort=="nom")">Nom A→Z</option>
+    </select>
+    <button class="btn btn-ghost">Appliquer</button>
+</form>
+
+@if (!Model.Products.Any())
+{
+    <div class="empty reveal"><h3>Aucun produit trouvé</h3><a class="btn btn-primary" asp-action="Index">Voir tout</a></div>
+}
+<div class="grid">
+    @foreach (var p in Model.Products) { <partial name="_ProductCard" model="p" /> }
+</div>
+
+@if (Model.TotalPages > 1)
+{
+    <nav class="pager" aria-label="Pagination">
+        <a class="page @(Model.PageActuelle == 1 ? "disabled" : "")" asp-action="Index" asp-route-categoryId="@Model.CategoryId" asp-route-search="@Model.Search" asp-route-sort="@Model.Sort" asp-route-page="@(Model.PageActuelle-1)">←</a>
+        @for (int i = 1; i <= Model.TotalPages; i++)
+        {
+            <a class="page @(i == Model.PageActuelle ? "active" : "")" asp-action="Index" asp-route-categoryId="@Model.CategoryId" asp-route-search="@Model.Search" asp-route-sort="@Model.Sort" asp-route-page="@i">@i</a>
+        }
+        <a class="page @(Model.PageActuelle == Model.TotalPages ? "disabled" : "")" asp-action="Index" asp-route-categoryId="@Model.CategoryId" asp-route-search="@Model.Search" asp-route-sort="@Model.Sort" asp-route-page="@(Model.PageActuelle+1)">→</a>
+    </nav>
+}

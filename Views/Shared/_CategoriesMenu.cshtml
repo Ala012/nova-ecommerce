@@ -1,0 +1,20 @@
+@model IEnumerable<Category>
+@{ var current = Context.Request.Query["categoryId"].ToString(); }
+<ul class="cat-list">
+    <li><a class="cat @(string.IsNullOrEmpty(current) ? "active" : "")" asp-controller="Product" asp-action="Index"><span>✦</span> Tous les produits</a></li>
+    @if (Model == null || !Model.Any())
+    {
+        <li class="muted">Aucune catégorie disponible.</li>
+    }
+    else
+    {
+        foreach (var c in Model)
+        {
+            <li>
+                <a class="cat @(current == c.CategoryId.ToString() ? "active" : "")" asp-controller="Product" asp-action="Index" asp-route-categoryId="@c.CategoryId">
+                    <span>@c.Icon</span> @c.CategoryName <em>@c.Products.Count</em>
+                </a>
+            </li>
+        }
+    }
+</ul>

@@ -1,0 +1,22 @@
+@model Product
+@{ ViewData["Title"] = Model.Name; var related = ViewBag.Related as IList<Product>; }
+<a class="back" asp-action="Index" asp-route-categoryId="@Model.CategoryId">← @Model.Category?.CategoryName</a>
+<section class="detail">
+    <div class="detail-img reveal"><img src="@Model.Image" alt="@Model.Name" /></div>
+    <div class="detail-info">
+        <p class="eyebrow">@Model.Category?.CategoryName</p>
+        <h1 class="split">@Model.Name</h1>
+        <p class="lead">@Model.Description</p>
+        <div class="price big">@Model.Price.ToString("0.00") <small>DT</small></div>
+        <p class="stock @(Model.QteStock < 15 ? "low" : "")">@Model.QteStock unités disponibles</p>
+        <div class="row-gap">
+            <button class="btn btn-primary add-ajax magnetic" data-id="@Model.ProductId">Ajouter au panier</button>
+            <a class="btn btn-ghost" asp-controller="Panier" asp-action="AddProduct" asp-route-id="@Model.ProductId">Acheter maintenant</a>
+        </div>
+    </div>
+</section>
+@if (related != null && related.Any())
+{
+    <h2 class="section-title">Dans la même catégorie</h2>
+    <div class="grid">@foreach (var p in related) { <partial name="_ProductCard" model="p" /> }</div>
+}

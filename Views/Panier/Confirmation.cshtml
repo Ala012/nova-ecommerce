@@ -1,0 +1,21 @@
+@model Order
+@{ ViewData["Title"] = "Confirmation"; }
+<section class="confirm reveal">
+    <div class="check">✓</div>
+    <h1 class="split">Merci, commande confirmée !</h1>
+    <p class="lead">Commande <b>#@Model.Id</b> du @Model.OrderDate.ToString("dd/MM/yyyy HH:mm") · Paiement : @Model.PaymentMethod</p>
+    <div class="panel">
+        <p><b>Client :</b> @Model.CustomerName (@Model.Email)</p>
+        <p><b>Livraison :</b> @Model.Address · @Model.Phone</p>
+        <table class="table">
+            <thead><tr><th>Produit</th><th>Qté</th><th>Prix</th><th>Total</th></tr></thead>
+            <tbody>@foreach (var i in Model.Items) { <tr><td>@i.ProductName</td><td>@i.Quantity</td><td>@i.Price.ToString("0.00")</td><td>@((i.Price*i.Quantity).ToString("0.00"))</td></tr> }</tbody>
+        </table>
+        <div class="sum-line total"><span>Total payé</span><span><b>@Model.TotalAmount.ToString("0.00")</b> DT</span></div>
+    </div>
+    <div class="row-gap center">
+        <a class="btn btn-primary" asp-controller="Product" asp-action="Index">Retour à la boutique</a>
+        <a class="btn btn-ghost" asp-controller="Orders" asp-action="Index">Mes commandes</a>
+    </div>
+</section>
+

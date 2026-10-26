@@ -1,0 +1,35 @@
+@model OrderViewModel
+@{ ViewData["Title"] = "Commande"; }
+<section class="hero small"><p class="eyebrow">Étape finale</p><h1 class="split">Passer la commande</h1></section>
+<div class="cart-layout">
+    <form asp-action="Checkout" method="post" class="panel reveal">
+        <div asp-validation-summary="ModelOnly" class="error"></div>
+        <label>Adresse de livraison</label>
+        <input class="input" asp-for="Address" placeholder="Rue, ville, code postal" />
+        <span asp-validation-for="Address" class="error"></span>
+        <label>Téléphone</label>
+        <input class="input" asp-for="Phone" placeholder="+216 …" />
+        <span asp-validation-for="Phone" class="error"></span>
+        <label>Méthode de paiement</label>
+        <div class="pay">
+            @foreach (var m in new[] { "Carte", "PayPal", "À la livraison" })
+            {
+                <label class="pay-opt"><input type="radio" asp-for="PaymentMethod" value="@m" /> <span>@m</span></label>
+            }
+        </div>
+        <button class="btn btn-primary btn-block magnetic" type="submit">Confirmer · @Model.TotalAmount.ToString("0.00") DT</button>
+    </form>
+    <aside class="summary reveal">
+        <h3>Votre commande</h3>
+        <table class="table">
+            <thead><tr><th>Produit</th><th>Qté</th><th>Prix</th><th>Total</th></tr></thead>
+            <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr><td>@item.ProductName</td><td>@item.Quantity</td><td>@item.Price.ToString("0.00")</td><td>@((item.Price * item.Quantity).ToString("0.00"))</td></tr>
+            }
+            </tbody>
+        </table>
+        <div class="sum-line total"><span>Montant total</span><span><b>@Model.TotalAmount.ToString("0.00")</b> DT</span></div>
+    </aside>
+</div>

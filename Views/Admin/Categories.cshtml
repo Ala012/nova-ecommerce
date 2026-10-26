@@ -1,0 +1,37 @@
+@model IEnumerable<Category>
+@{ ViewData["Title"] = "Gestion des catégories"; }
+<section class="hero small">
+	<p class="eyebrow">Administration</p>
+	<h1>Catégories</h1>
+	<p class="lead">Organiser les catégories du catalogue.</p>
+	<div class="row-gap">
+		<a class="btn btn-primary" asp-action="CreateCategory">Ajouter une catégorie</a>
+		<a class="btn btn-ghost" asp-action="Products">Gérer les produits</a>
+		<a class="btn btn-ghost" asp-action="Users">Gérer les utilisateurs</a>
+	</div>
+</section>
+@if (TempData["AdminError"] is string error)
+{
+	<p class="admin-message error">@error</p>
+}
+<div class="admin-table-wrap">
+	<table class="table admin-table">
+		<thead><tr><th>Icône</th><th>Nom</th><th>Produits</th><th>Actions</th></tr></thead>
+		<tbody>
+		@foreach (var category in Model)
+		{
+			<tr>
+				<td>@category.Icon</td>
+				<td>@category.CategoryName</td>
+				<td>@category.Products.Count</td>
+				<td class="admin-actions">
+					<a class="btn btn-ghost" asp-action="EditCategory" asp-route-id="@category.CategoryId">Modifier</a>
+					<form asp-action="DeleteCategory" asp-route-id="@category.CategoryId" method="post" onsubmit="return confirm('Supprimer cette catégorie ?');">
+						<button class="btn btn-danger" type="submit" disabled="@(category.Products.Count != 0)">Supprimer</button>
+					</form>
+				</td>
+			</tr>
+		}
+		</tbody>
+	</table>
+</div>

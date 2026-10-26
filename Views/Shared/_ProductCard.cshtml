@@ -1,0 +1,15 @@
+@model Product
+<article class="card spotlight reveal">
+    <a class="card-img" asp-controller="Product" asp-action="Details" asp-route-id="@Model.ProductId">
+        <img src="@Model.Image" alt="@Model.Name" loading="lazy" />
+        <span class="chip">@Model.Category?.CategoryName</span>
+    </a>
+    <div class="card-body">
+        <h3><a asp-controller="Product" asp-action="Details" asp-route-id="@Model.ProductId">@Model.Name</a></h3>
+        <div class="card-meta">
+            <span class="price">@Model.Price.ToString("0.00") <small>DT</small></span>
+            <span class="stock @(Model.QteStock < 15 ? "low" : "")">@Model.QteStock en stock</span>
+        </div>
+        <button class="btn btn-primary btn-block add-ajax magnetic" data-id="@Model.ProductId">Ajouter au panier</button>
+    </div>
+</article>

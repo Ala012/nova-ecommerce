@@ -1,0 +1,41 @@
+@model ProductEditViewModel
+@{ ViewData["Title"] = Model.ProductId == 0 ? "Ajouter un produit" : "Modifier un produit"; }
+<section class="hero small">
+	<p class="eyebrow">Administration · Produits</p>
+	<h1>@ViewData["Title"]</h1>
+</section>
+<form class="panel admin-form" asp-action="SaveProduct" method="post" enctype="multipart/form-data">
+	<input asp-for="ProductId" type="hidden" />
+	<div asp-validation-summary="ModelOnly" class="error"></div>
+	<label asp-for="Name">Nom</label>
+	<input asp-for="Name" class="input" />
+	<span asp-validation-for="Name" class="error"></span>
+	<label asp-for="Description">Description</label>
+	<textarea asp-for="Description" class="input" rows="4"></textarea>
+	<span asp-validation-for="Description" class="error"></span>
+	<label asp-for="Price">Prix (DT)</label>
+	<input asp-for="Price" class="input" type="number" step="0.01" min="0.01" />
+	<span asp-validation-for="Price" class="error"></span>
+	<label asp-for="QteStock">Quantité en stock</label>
+	<input asp-for="QteStock" class="input" type="number" min="0" />
+	<span asp-validation-for="QteStock" class="error"></span>
+	<label asp-for="ImageFile">Image du produit (JPG, PNG, GIF ou WebP, 5 Mo maximum)</label>
+	<input asp-for="ImageFile" class="input" type="file" accept="image/jpeg,image/png,image/gif,image/webp" />
+	<span asp-validation-for="ImageFile" class="error"></span>
+	@if (!string.IsNullOrWhiteSpace(Model.Image))
+	{
+		<div class="current-image">
+			<p class="muted">Image actuelle :</p>
+			<img src="@Model.Image" alt="Image actuelle du produit" />
+		</div>
+	}
+	<label asp-for="CategoryId">Catégorie</label>
+	<select asp-for="CategoryId" asp-items="ViewBag.ProductCategories" class="input">
+		<option value="0">Sélectionner une catégorie</option>
+	</select>
+	<span asp-validation-for="CategoryId" class="error"></span>
+	<div class="row-gap">
+		<button class="btn btn-primary" type="submit">Enregistrer</button>
+		<a class="btn btn-ghost" asp-action="Products">Annuler</a>
+	</div>
+</form>

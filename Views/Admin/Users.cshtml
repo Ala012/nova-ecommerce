@@ -1,0 +1,46 @@
+@model AdminUsersViewModel
+@{ ViewData["Title"] = "Gestion des utilisateurs"; var currentUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value; }
+<section class="hero small">
+	<p class="eyebrow">Administration</p>
+	<h1>Utilisateurs</h1>
+	<p class="lead">Attribuer le rôle administrateur ou client. Votre propre rôle ne peut pas être modifié ici.</p>
+	<div class="row-gap">
+		<a class="btn btn-ghost" asp-action="Products">Gérer les produits</a>
+		<a class="btn btn-ghost" asp-action="Categories">Gérer les catégories</a>
+	</div>
+</section>
+@if (TempData["AdminError"] is string error)
+{
+	<p class="admin-message error">@error</p>
+}
+<div class="admin-table-wrap">
+	<table class="table admin-table">
+		<thead><tr><th>E-mail</th><th>Rôle</th><th>Action</th></tr></thead>
+		<tbody>
+		@foreach (var user in Model.Users)
+		{
+			<tr>
+				<td>@user.Email</td>
+				<td>@(user.Role == "Admin" ? "Administrateur" : "Client")</td>
+				<td>
+					@if (user.UserId == currentUserId)
+					{
+						<span class="muted">Votre compte</span>
+					}
+					else
+					{
+						<form asp-action="SetUserRole" method="post" class="admin-actions">
+							<input type="hidden" name="userId" value="@user.UserId" />
+							<select class="input role-select" name="role" aria-label="Rôle de @user.Email">
+								<option value="Customer" selected="@(user.Role == "Customer")">Client</option>
+								<option value="Admin" selected="@(user.Role == "Admin")">Administrateur</option>
+							</select>
+							<button class="btn btn-primary" type="submit">Enregistrer</button>
+						</form>
+					}
+				</td>
+			</tr>
+		}
+		</tbody>
+	</table>
+</div>

@@ -1,0 +1,20 @@
+@model CategoryEditViewModel
+@{ ViewData["Title"] = Model.CategoryId == 0 ? "Ajouter une catégorie" : "Modifier une catégorie"; }
+<section class="hero small">
+	<p class="eyebrow">Administration · Catégories</p>
+	<h1>@ViewData["Title"]</h1>
+</section>
+<form class="panel admin-form" asp-action="SaveCategory" method="post">
+	<input asp-for="CategoryId" type="hidden" />
+	<div asp-validation-summary="ModelOnly" class="error"></div>
+	<label asp-for="CategoryName">Nom</label>
+	<input asp-for="CategoryName" class="input" />
+	<span asp-validation-for="CategoryName" class="error"></span>
+	<label asp-for="Icon">Icône (emoji ou symbole)</label>
+	<input asp-for="Icon" class="input" />
+	<span asp-validation-for="Icon" class="error"></span>
+	<div class="row-gap">
+		<button class="btn btn-primary" type="submit">Enregistrer</button>
+		<a class="btn btn-ghost" asp-action="Categories">Annuler</a>
+	</div>
+</form>

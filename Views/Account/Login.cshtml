@@ -1,0 +1,14 @@
+@model LoginViewModel
+@{ ViewData["Title"] = "Connexion"; }
+<section class="auth panel reveal">
+    <h1 class="split">Connexion</h1>
+    <form asp-action="Login" method="post">
+        <div asp-validation-summary="ModelOnly" class="error"></div>
+        <input type="hidden" asp-for="ReturnUrl" />
+        <label>Email</label><input class="input" asp-for="Email" /><span asp-validation-for="Email" class="error"></span>
+        <label>Mot de passe</label><input class="input" asp-for="Password" /><span asp-validation-for="Password" class="error"></span>
+        <label class="pay-opt"><input asp-for="RememberMe" /> <span>Se souvenir de moi</span></label>
+        <button class="btn btn-primary btn-block">Se connecter</button>
+    </form>
+    <p class="muted">Pas de compte ? <a asp-action="Register">Créer un compte</a></p>
+</section>
